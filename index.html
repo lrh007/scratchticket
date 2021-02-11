@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1" />
+<title>刮刮乐抽奖</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript"  src="js/jquery-1.9.1.js"></script>
+<script type="text/javascript"  src="config.js"></script>
+</head>
+<body style="overflow:hidden">
+
+<div id="bg" style="position:absolute;top:0;left:0;"><img src="img/guaguaka_bg.png" style="width:100%; height:auto" / ></div>
+<div id="bg2" style="width:295px;height:195px;margin:0 auto;"> <img id="bg2_img" src="img/guaguaka_word.png" width="295" height="195" style="position: absolute;"> </div>
+
+<div id="gua1" style="width:510px;;margin:0 auto;" > 
+	<div id="show" style="position:absolute;display:none;" align="center">
+	</div>
+	<img id="gua1_img" class="xiangpicls" src="img/gua_image.png" style="position: absolute;">
+	<canvas id="front" class="xiangpicls"  style="position:absolute;no-repeat;z-index:1005;" />
+	
+</div>
+<div id="notify" style="width:295px;height:101px;margin:310px auto;"> <img id="nImg" src="img/notice_bg.png" style="position: absolute;">
+  <div id="nImg_div" style="position: absolute;color:white;font-size: 17px;font-family: '黑体'" align="center">
+<div style="width:245px;height:101px;padding:20px 0px 0px 50px;" align="left">按下鼠标滑动，即可抽取神秘大奖哦！</div>
+</div>
+</div>
+<div class="keBottom">
+<button class="resetbtn">重新抽奖</button>
+</div>
+
+
+<script type="text/javascript">   
+var gua = 1,re = 2;
+var imgSrc = 'img/aa.png';
+
+
+$(function(){
+    var width = $("#show_img").width();
+    var height = $("#show_img").height();
+    var winheight=$(window).height();
+    var winwidth=$(window).width();
+});
+
+window.onload=function(){
+
+	 var key = globalkeys[Math.floor((Math.random()*globalkeys.length))];
+	 $("#show").empty().text(key).show();
+
+}
+$("img").load(function(){
+    var body_width = $(window).width();
+    var body_height = $(window).height();
+    $("#gua1_img").width(500).height(250);
+    var height = 233;
+    var width  = 483;
+    var bg2_width = $("#bg2_img").width();
+    var bg2_height = $("#bg2_img").height();
+    
+    $("#gua1").css({"margin-top":"20px"});
+    $("#notify").css({"margin-top":"310px"});
+    $("#nImg").width(300).height(101);
+    $("#gua").width(width/10).height(width/10);
+    var gua1_img_width = $("#gua1_img").width();
+    $("#front").css({"margin-top":9.3+"px","margin-left":7.5+"px"});
+    $("#bg").width("100%").height($(window).height()-1);
+    if(gua > 0){
+        bodys(height,width);
+    }
+});
+function bodys(height,width){
+    var img = new Image();         
+    var canvas = document.querySelector('canvas');         
+    canvas.style.position = 'absolute';           
+    img.addEventListener('load',function(e){  
+        var ctx;
+        var w = width, h = height;             
+        var offsetX = canvas.offsetLeft, offsetY = canvas.offsetTop;             
+        var mousedown = false;               
+        function layer(ctx){                 
+            ctx.fillStyle = 'gray';                 
+            ctx.fillRect(0, 0, w, h);             
+        }   
+        function eventDown(e){                 
+            e.preventDefault();                 
+            mousedown=true;             
+        }   
+        function eventUp(e){            
+            e.preventDefault();                 
+            mousedown=false;             
+        }               
+        function eventMove(e){                 
+            e.preventDefault();                 
+            if(mousedown){                     
+                if(e.changedTouches){                         
+                    e=e.changedTouches[e.changedTouches.length-1];                     
+                }                     
+                var x = (e.clientX + document.body.scrollLeft || e.pageX) - offsetX || 0,                         
+                y = (e.clientY + document.body.scrollTop || e.pageY) - offsetY || 0;                     
+                with(ctx){                    
+                    beginPath()                     
+                    arc(x, y, 50, 0, Math.PI * 2);                         
+                    fill();                     
+                }                
+            }             
+        }               
+        canvas.width=w;             
+        canvas.height=h; 
+        
+        canvas.style.backgroundImage='url('+img.src+')';              
+        ctx=canvas.getContext('2d');         
+        ctx.fillStyle='b9b9b9';             
+        ctx.fillRect(0, 0, w, h);
+
+        layer(ctx);               
+        ctx.globalCompositeOperation = 'destination-out';               
+        canvas.addEventListener('touchstart', eventDown);             
+        canvas.addEventListener('touchend', eventUp);             
+        canvas.addEventListener('touchmove', eventMove);             
+        canvas.addEventListener('mousedown', eventDown);             
+        canvas.addEventListener('mouseup', eventUp);             
+        canvas.addEventListener('mousemove', eventMove);       
+    });
+    
+    img.src = imgSrc;
+    (document.body.style);
+	
+	$(".resetbtn").click(function(){
+		window.location.reload();
+	});
+}
+
+    
+    
+</script>
+
+</body>
+</html>
