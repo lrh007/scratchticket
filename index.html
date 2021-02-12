@@ -31,9 +31,8 @@
 
 
 <script type="text/javascript">   
-var gua = 1,re = 2;
-var imgSrc = 'img/aa.png';
 
+var imgSrc = 'img/gua_image.png';
 
 $(function(){
     var width = $("#show_img").width();
@@ -43,7 +42,6 @@ $(function(){
 });
 
 window.onload=function(){
-
 	 var key = globalkeys[Math.floor((Math.random()*globalkeys.length))];
 	 $("#show").empty().text(key).show();
 
@@ -64,9 +62,8 @@ $("img").load(function(){
     var gua1_img_width = $("#gua1_img").width();
     $("#front").css({"margin-top":9.3+"px","margin-left":7.5+"px"});
     $("#bg").width("100%").height($(window).height()-1);
-    if(gua > 0){
-        bodys(height,width);
-    }
+    bodys(height,width);
+    
 });
 function bodys(height,width){
     var img = new Image();         
@@ -105,9 +102,7 @@ function bodys(height,width){
             }             
         }               
         canvas.width=w;             
-        canvas.height=h; 
-        
-        canvas.style.backgroundImage='url('+img.src+')';              
+        canvas.height=h;           
         ctx=canvas.getContext('2d');         
         ctx.fillStyle='b9b9b9';             
         ctx.fillRect(0, 0, w, h);
@@ -122,14 +117,12 @@ function bodys(height,width){
         canvas.addEventListener('mousemove', eventMove);       
     });
     
-    img.src = imgSrc;
+    img.src = imgSrc;	
     (document.body.style);
-	
-	$(".resetbtn").click(function(){
+}
+$(".resetbtn").click(function(){
 		window.location.reload();
 	});
-}
-
     
     
 </script>
