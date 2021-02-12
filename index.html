@@ -33,25 +33,29 @@
 <script type="text/javascript">   
 
 var imgSrc = 'img/gua_image.png';
+var height = 233;
+var width  = 483;
+var tempKey;
 
-$(function(){
-    var width = $("#show_img").width();
-    var height = $("#show_img").height();
-    var winheight=$(window).height();
-    var winwidth=$(window).width();
-});
-
-window.onload=function(){
-	 var key = globalkeys[Math.floor((Math.random()*globalkeys.length))];
-	 $("#show").empty().text(key).show();
-
+function randomFun(){
+	var key = getKey(tempKey);
+	$("#show").empty().text(tempKey).show();
 }
+//避免和上一次的重复
+function getKey(oldKey){
+	var key = globalkeys[Math.floor((Math.random()*globalkeys.length))];
+	if(oldKey === key){
+		return getKey(key);
+	}
+	tempKey = key;
+	return key;
+}
+
 $("img").load(function(){
     var body_width = $(window).width();
     var body_height = $(window).height();
     $("#gua1_img").width(500).height(250);
-    var height = 233;
-    var width  = 483;
+    
     var bg2_width = $("#bg2_img").width();
     var bg2_height = $("#bg2_img").height();
     
@@ -114,15 +118,16 @@ function bodys(height,width){
         canvas.addEventListener('touchmove', eventMove);             
         canvas.addEventListener('mousedown', eventDown);             
         canvas.addEventListener('mouseup', eventUp);             
-        canvas.addEventListener('mousemove', eventMove);       
+        canvas.addEventListener('mousemove', eventMove); 
+		randomFun();		
     });
     
     img.src = imgSrc;	
-    (document.body.style);
 }
 $(".resetbtn").click(function(){
-		window.location.reload();
-	});
+	bodys(height,width);
+	
+});
     
     
 </script>
