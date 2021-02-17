@@ -32,21 +32,73 @@
 
 <script type="text/javascript">   
 
-var imgSrc = 'img/gua_image.png';
-var height = 233;
-var width  = 483;
+const imgSrc = 'img/gua_image.png';
+const height = 233;
+const width  = 483;
 var tempKey;
-
+var globalJsonKey;
+var initNum;
 function randomFun(){
-	var key = getKey(tempKey);
-	$("#show").empty().text(tempKey).show();
-}
-//避免和上一次的重复
-function getKey(oldKey){
-	var key = globalkeys[Math.floor((Math.random()*globalkeys.length))];
-	if(oldKey === key){
-		return getKey(key);
+	if(awardsType === 1){
+		var key = getKey(tempKey,globalkeys);
+		$("#show").empty().text(tempKey).show();
+	}else{
+		randomJsonKey();	
+		
 	}
+}
+//获取随机奖项
+function randomJsonKey(){
+	//保证key数组只能初始化一次
+	if(globalJsonKey === undefined){
+	    initJSONKeys();
+	}
+	if(globalJsonKey.length <= 0){
+		$("#show").empty().text('奖项已经抽取完成').show();
+		alert("所有奖项已经抽取完成");
+		return;
+	}else{
+		var key = getKey(tempKey,globalJsonKey);
+		var json = globalkeys2[key];
+		var awards = json.awards;
+		var num = json.num;
+		num = parseInt(num) - 1;
+		json.num = num;
+		if(num <= 0){
+			//将数量小于0的删除
+			delOneArray(globalJsonKey,key);
+		}
+		$("#show").empty().text(tempKey+":"+awards).show();
+	}
+	
+}
+//初始化遍历json对象的key
+function initJSONKeys(){
+	globalJsonKey = new Array();
+	$.each(globalkeys2,function(index,item){
+		//console.log(index);
+		if(globalJsonKey.indexOf(index) === -1){
+			globalJsonKey.push(index);
+		}
+	
+	});
+}
+//删除数组中指定元素
+function delOneArray(array,key){
+	const idx = array.indexOf(key);
+	array.splice(idx,1);
+}
+
+//避免和上一次的重复
+function getKey(oldKey,keys){
+	
+	var key = keys[Math.floor((Math.random()*keys.length))];
+	if(keys.length >1){
+		if(oldKey === key){
+			return getKey(key,keys);
+		}
+	}
+	
 	tempKey = key;
 	return key;
 }
@@ -110,7 +162,6 @@ function bodys(height,width){
         ctx=canvas.getContext('2d');         
         ctx.fillStyle='b9b9b9';             
         ctx.fillRect(0, 0, w, h);
-
         layer(ctx);               
         ctx.globalCompositeOperation = 'destination-out';               
         canvas.addEventListener('touchstart', eventDown);             
@@ -119,12 +170,17 @@ function bodys(height,width){
         canvas.addEventListener('mousedown', eventDown);             
         canvas.addEventListener('mouseup', eventUp);             
         canvas.addEventListener('mousemove', eventMove); 
-		randomFun();		
+		if(initNum === undefined){
+			initNum = 1;
+			randomFun();
+		}
+			
     });
     
     img.src = imgSrc;	
 }
 $(".resetbtn").click(function(){
+	initNum = undefined;
 	bodys(height,width);
 	
 });
